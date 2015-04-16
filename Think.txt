@@ -1,0 +1,192 @@
+﻿# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 02 11:13:43 2015
+
+@author: Administrator
+"""
+
+0 最后提交的时候前31天训练才对 不是30天
+1 先把时间转换到 0-30  paras_time.py
+ 
+2 数据预处理     before_pro.py
+    把30天从没买过东西的人去掉
+3 划分数据集  split.py
+    10天为一个训练集x.csv  x.result为标签 29.csv 28-19
+4 仅预测前一天（两天加入购物车的人）提取训练集 验证集 测试集的特征 feature.py validtio_feature.py test_feature.py
+    正负样本约为1:10 
+5 模型的训练 RL 和随机森林 RL效果好 model_.py
+6 预测的商品都在Item 表里 训练时所有物品建模 Result仅有P集
+7 get F1.py 就RL 和RF的交集 得到predict_result.csv
+待解决问题
+双12
+数据归一化
+模型参数调节
+地理位置和类别如何利用
+30号的UI有0.342494714588来自前29
+30号的UI有0.317124735729来自前10天
+4.4 提交 
+    江月提交的是17 18加购物车但是为买 276
+    我提交的是前十天随机森林训练出来的 303
+    相交的有94条 约瑟dai提交 
+    18769780820 dai651128
+4.5 提交
+    4.5_1是18号加购物车的在P集合中的去掉当天购买的 应该F1在6 me 均为0
+    predict_num is:  955 
+    hit_num is:  44
+    total result num is:  473
+    Precision is： 0.0460732984293
+    Call rate is:  0.093023255814
+    F1 is:  0.0616246498599
+    数据清洗时把买过的商品留下 清洗过度了
+    4.5_2随机森林生成的结果集合(20天的训练集) dai 线上F1 2.985075% P 1.701610% C 12.147505%
+    predict_num is:  2357
+    hit_num is:  39
+    total result num is:  473
+    Precision is： 0.0165464573611
+    Call rate is:  0.0824524312896
+    F1 is:  0.0275618374558
+    4.5_3LR生成的结果的集合(20天的训练集) yue 线上F1 6.635623% P 4.534606% C 12.364425%
+    predict_num is:  1343
+    hit_num is:  47
+    total result num is:  473
+    Precision is： 0.0349962769918
+    Call rate is:  0.0993657505285
+    F1 is:  0.0517621145374
+    4.5_4 LR RF集合  线上 F1 8.263069% P 6.758621% C 10.629067% hit 49  
+4.6 提交
+    predict_v_RF是 RL21维 的
+    RL predict_num is:  1964
+    RL hit_num is:  47
+    RL total result num is:  473
+    RL Precision is： 0.0239307535642
+    RL Call rate is:  0.0993657505285
+    RL F1 is:  0.0385720147723 
+    predict_v_RL是 RF 21维的 dai
+    RF predict_num is:  3487
+    RF hit_num is:  49
+    RF total result num is:  473
+    RF Precision is： 0.0140521938629
+    RF Call rate is:  0.103594080338
+    RF F1 is:  0.0247474747475 
+    4.6_3是 1 2 交集 yue  线上 F1 7.255521% P 5.700124% C 9.978308% hit 46
+    ensambel predict_num is:  796
+    ensambel hit_num is:  36
+    ensambel total result num is:  473
+    ensambel Precision is： 0.0452261306533
+    ensambel Call rate is:  0.0761099365751
+    ensambel F1 is:  0.0567375886525 
+    添加的 ui_score 效果不好
+4.7 添加了最后一次访问到最后一天的时间 
+    tijiao4.7_1.csv
+    ensambel predict_num is:  787
+    ensambel hit_num is:  41
+    ensambel total result num is:  473
+    ensambel Precision is： 0.0520965692503
+    ensambel Call rate is:  0.0866807610994
+    ensambel F1 is:  0.0650793650794 
+    
+    RL predict_num is:  1191
+    RL hit_num is:  47
+    RL total result num is:  473
+    RL Precision is： 0.03946263644
+    RL Call rate is:  0.0993657505285
+    RL F1 is:  0.0564903846154 
+    
+    RF predict_num is:  3127
+    RF hit_num is:  55
+    RF total result num is:  473
+    RF Precision is： 0.0175887432043
+    RF Call rate is:  0.116279069767
+    RF F1 is:  0.0305555555556 
+4.8 
+去掉没购买过的商品 性能大幅度提升(程序错误)
+    ensambel predict_num is:  84 yue
+    ensambel hit_num is:  34
+    ensambel total result num is:  473
+    ensambel Precision is： 0.404761904762
+    ensambel Call rate is:  0.0718816067653
+    ensambel F1 is:  0.122082585278 
+    
+    RL predict_num is:  114 me
+    RL hit_num is:  41
+    RL total result num is:  473
+    RL Precision is： 0.359649122807
+    RL Call rate is:  0.0866807610994
+    RL F1 is:  0.139693356048 
+    
+    RF predict_num is:  322 dai
+    RF hit_num is:  48
+    RF total result num is:  473
+    RF Precision is： 0.149068322981
+    RF Call rate is:  0.101479915433
+    RF F1 is:  0.120754716981 
+
+    ITEM表里 选择前29天买过的物品
+4.8 最后提交数据变为前30天的整体训练而不是29天
+    ensambel predict_num is:  757 me
+    ensambel hit_num is:  36
+    ensambel total result num is:  473
+    ensambel Precision is： 0.0475561426684
+    ensambel Call rate is:  0.0761099365751
+    ensambel F1 is:  0.0585365853659 
+    
+    RL predict_num is:  1185 yue
+    RL hit_num is:  47
+    RL total result num is:  473
+    RL Precision is： 0.0396624472574
+    RL Call rate is:  0.0993657505285
+    RL F1 is:  0.0566948130277 
+    
+    RF predict_num is:  2778 dai
+    RF hit_num is:  51
+    RF total result num is:  473
+    RF Precision is： 0.0183585313175
+    RF Call rate is:  0.107822410148
+    RF F1 is:  0.0313749615503 
+ 
+
+4.9 先划分出21个训练集 再进行交叉验证
+4.10 训练完在自己的集合上测试也不高 欠拟合
+	提交了21个训练集的预测结果 
+	提交了去掉在30号买了的人
+
+4.13
+训练以后在训练集的表现
+    ensambel predict_num is:  745
+    ensambel hit_num is:  47
+    ensambel total result num is:  473
+    ensambel Precision is： 0.0630872483221
+    ensambel Call rate is:  0.0993657505285
+    ensambel F1 is:  0.0771756978654 
+    
+    RL predict_num is:  1192
+    RL hit_num is:  47
+    RL total result num is:  473
+    RL Precision is： 0.0394295302013
+    RL Call rate is:  0.0993657505285
+    RL F1 is:  0.0564564564565 
+    
+    RF predict_num is:  3077
+    RF hit_num is:  139
+    RF total result num is:  473
+    RF Precision is： 0.0451738706532
+    RF Call rate is:  0.293868921776
+    RF F1 is:  0.0783098591549 
+
+30号 单买前10天无记录
+139878830 174054968
+139878830 37101896
+139878830 86104455
+139878830 161558138
+139878830 81615357
+139878830 115762602
+
+
+
+
+133629702 369275548
+133629702 135256079
+133629702 219239221
+
+item p 445623个 311201个无地理位置 x 0
+30号没买交互过的物品
