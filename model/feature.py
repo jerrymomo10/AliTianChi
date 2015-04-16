@@ -4,7 +4,6 @@ Created on Mon Mar 30 16:39:27 2015
 
 @author: Administrator
 """
-#build features by x.csv
 import pandas as pd
 import random
 
@@ -35,7 +34,7 @@ def behavior_sum10(df):
 """
 1.十天商品的销量，五天的销量，三天的销量，最后一天的销量 输入为十天的DF（U I B CU CI T） 输出为U  F1 F2 F3 F4 
 """
-def Item_sale(df):
+def Item_sale(df,i):
     t = ["item_id","time"]
     df_2 = df[df.behavior_type==4][t]
     x = df_2.item_id.value_counts()
@@ -65,7 +64,7 @@ def Item_sale(df):
 """
 2.成交订单数 10 5 3 1 输入为十天的DF（U I B CU CI T） 输出为U  F1 F2 F3 F4 
 """
-def I_Orders(df):
+def I_Orders(df,i):
     t = ["item_id","user_id","time"]
     df_2 = df[df.behavior_type==4][t]
     df_3 = df_2[["item_id","user_id"]].drop_duplicates()
@@ -110,7 +109,7 @@ def I_Orders(df):
 """
 3.购买人数10 5 3 1 输入为十天的DF（U I B CU CI T） 输出为U  F1 F2 F3 F4 
 """
-def I_buyers(df):
+def I_buyers(df,i):
     t = ["item_id","user_id","time"]
     df_2 = df[df.behavior_type==4][t]
     df_3 = df_2[["item_id","user_id"]].drop_duplicates()
@@ -148,7 +147,7 @@ def I_buyers(df):
 """
 1.倒数1 2 3 4 5 天添加购物车 输入为十天的DF（U I B CU CI T） 输出为U  F1 F2 F3 F4 F5  F1为最后一天加入购物车与否 
 """
-def car(df):
+def car(df,i):
     t = ["user_id","item_id","time"]
     df_2 = df[df.behavior_type==3][t]
     a = df_2[df_2.time==i-5][["user_id","item_id"]].drop_duplicates()
@@ -174,7 +173,7 @@ def car(df):
 """
 2. 倒数1 2 3 4 5 天购买 输入为十天的DF（U I B CU CI T） 输出为U I F1 F2 F3 F4 F5  F1为最后一天是否被购买 
 """
-def buy(df):
+def buy(df,i):
     t = ["user_id","item_id","time"]
     df_2 = df[df.behavior_type==4][t]
     a = df_2[df_2.time==i-5][["user_id","item_id"]].drop_duplicates()
@@ -200,7 +199,7 @@ def buy(df):
 """
 3.前十天累计的行为（1 2 3 4）  输入为十天的DF（U I B CU CI T） 输出为U I F1   F1累计点击 F2 收藏 F3购物车 F4购买
 """
-def UI_Sum(df):
+def UI_Sum(df,i):
     t = ["user_id","item_id","behavior_type"]
     df_2 = df[t]
     df_3 = df_2[df_2.behavior_type==1][["user_id","item_id"]]
@@ -255,7 +254,7 @@ def UI_Sum(df):
 """
 5.最后一次访问到第十天的时间间隔 输入为十天的DF（U I B CU CI T） 输出为U I F1   F1最后一次访问到第十天的间隔
 """
-def last_time(df):
+def last_time(df,i):
     t = ["user_id","item_id"]
     #最后一天访问的UI
     df_1 = df[(df.time==(i-1))&(df.behavior_type!=1)][t].drop_duplicates()
@@ -325,82 +324,4 @@ def last_time(df):
     df_2["last_time"]=10
     df_ui = pd.concat([df_ui,df_2],ignore_index=True)
     return df_ui
-#构建特征提取以后的训练集
-    
-j = 10 
-#为每一个训练集打标签
-df_items = pd.read_csv("tianchi_mobile_recommend_train_item.csv")
-df_items = df_items.item_id.drop_duplicates()
-a = pd.DataFrame()
-a["item_id"] = df_items.values
-df_items = a
-
-df_trains = pd.DataFrame()
-for x in range(21):
-    i = j+x
-    print "Trains "+str(x+1)
-    #提取最后一天的购买记录为前十天打标签
-    df_tag = pd.read_csv("result"+str(i)+".csv")
-    df_tag["tag"] = 1
-
-    df_feature = pd.read_csv(str(i)+".csv")
-    #只在P集合里的 适用在UI I 特征中
-    df_feature_item = pd.merge(left=df_feature,right=df_items,how="inner")
-    
-    #为前十天打标签 预测的UI为前十天有行为的
-    df_ui = df_feature[["user_id","item_id"]].drop_duplicates()
-    df_ui = pd.merge(left=df_ui,right=df_items,how="inner")
-
-    df_ui_tag = pd.merge(left=df_ui,right=df_tag,how="left")
-    df_ui_tag.fillna(0,inplace=True)
-
-    #Features 不要只 与 商品 会丢失用户的信息
-
-    #df_ui_tag 为2万左右 预测这2万即可 其中只有113人为正样本 存在正负样本失衡(1:180) 考虑用户剔除和样本抽样
-    #抽样 负样本随机抽样 变为正负为1:10 UI变为1463
-    df_ui_tag_p = df_ui_tag[df_ui_tag.tag==1]
-    df_ui_tag_n = df_ui_tag[df_ui_tag.tag==0]
-    lp = len(df_ui_tag_p)
-    ln = len(df_ui_tag_n)
-    if float(ln)/lp > 15:
-        a = range(0,ln)
-        slice = random.sample(a,lp*15)    
-        df_ui_tag_n = df_ui_tag_n.iloc[slice]
-        df_ui_tag = pd.concat([df_ui_tag_p,df_ui_tag_n],ignore_index=True)
-
-    #最后汇总时添加
-    df_buy_sum10 = buy_sum10(df_feature)
-    df_train = pd.merge(left=df_ui_tag,right=df_buy_sum10,how="left")
-    
-    df_behavior_sum10 = behavior_sum10(df_feature)
-    df_train = pd.merge(left=df_train,right=df_behavior_sum10,how="left")
-    
-    df_train["buy_behavs"] =  df_train.buy_sum10/df_train.behaviors_sum10
-    
-    df_item1 = Item_sale(df_feature_item)
-    df_train = pd.merge(left=df_train,right=df_item1,how="left")
-    
-    df_car = car(df_feature_item)
-    df_train = pd.merge(left=df_train,right=df_car,how="left")
-    
-    df_buy = buy(df_feature_item)
-    df_train = pd.merge(left=df_train,right=df_buy,how="left")
-    
-    df_orders = I_Orders(df_feature_item)    
-    df_train = pd.merge(left=df_train,right=df_orders,how="left")
-    
-    #df_I_buyers = I_buyers(df_feature_item)
-    #df_train = pd.merge(left=df_train,right=df_I_buyers,how="left")        
-    
-    df_ui_sum = UI_Sum(df_feature_item)
-    df_train = pd.merge(left=df_train,right=df_ui_sum,how="left")    
-    
-    df_ui_last_time = last_time(df_feature_item)
-    df_train = pd.merge(left=df_train,right=df_ui_last_time,how="left")
-    
-    
-    df_train.fillna(0,inplace=True)
-    df_trains = pd.concat([df_trains,df_train],ignore_index=True)
-    
-df_trains.to_csv("train_feature.csv",index=False)
 

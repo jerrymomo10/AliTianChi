@@ -4,11 +4,14 @@ Created on Sun Apr 05 00:50:24 2015
 时间转换 train_paras_time.csv 0-30
 @author: Administrator
 """
+
 import pandas as pd
 from datetime import *
 import time
 import os
-os.chdir('d://tianchi/data')
+import system_
+system_.__clear_env()
+os.chdir('../data')
 
 BEGINTIME = datetime(2014,11,18,0,0)
 
@@ -26,4 +29,4 @@ df_train_user.to_csv("train_paras_time.csv",index=False)
 t1 = time.time()
 print "Paras time Finished!\n"
 print "It takes %f s to paras the time,generate 'train_paras_time.csv' in ../data" %(t1-t0)
-os.chdir('d://tianchi/process')
+os.chdir('../process')

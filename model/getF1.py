@@ -5,6 +5,11 @@ Created on Mon Mar 30 00:53:21 2015
 @author: Administrator
 """
 import pandas as pd
+import system_
+import os
+from feature import *
+os.chdir('../data')
+system_.__clear_env()
 
 predict_num = 0
 hit_num = 0
@@ -17,11 +22,12 @@ callrate = 0
 x = pd.read_csv("predict_v_RL.csv")
 y = pd.read_csv("predict_v_RF.csv")
 z = pd.merge(left=x,right=y,how="inner")
-z.to_csv("predict_result.csv",index=False)
+z.to_csv("ensambel_predict_result.csv",index=False)
 
-
+os.chdir('files')
 df_result = pd.read_csv("result30.csv")
-df_predict = pd.read_csv("predict_result.csv")
+os.chdir('..')
+df_predict = pd.read_csv("ensambel_predict_result.csv")
 
 inner = pd.merge(left=df_result,right=df_predict,how="inner")
 

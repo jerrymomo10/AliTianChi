@@ -7,7 +7,9 @@ Created on Wed Apr 01 21:06:59 2015
 
 import pandas as pd
 import os
-os.chdir('d://tianchi/data')
+import system_
+system_.__clear_env()
+os.chdir('../data')
 
 df = pd.read_csv("train_paras_time.csv")
 df2 = df[["user_id","behavior_type","time"]]
@@ -27,4 +29,4 @@ a["user_id"] = buyers.values
 df = pd.merge(left=a,right=df,how='left')
 print "Left Behavior is: "+str(len(df))
 df.to_csv("train_paras_time_bprocess.csv",index=False)
-os.chdir('d://tianchi/process')
+os.chdir('../process')
