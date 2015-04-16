@@ -172,7 +172,10 @@ Created on Thu Apr 02 11:13:43 2015
     RF Precision is： 0.0451738706532
     RF Call rate is:  0.293868921776
     RF F1 is:  0.0783098591549 
-
+4.16
+    ensambel me
+    RL       yue
+    RF       dai
 30号 单买前10天无记录
 139878830 174054968
 139878830 37101896
