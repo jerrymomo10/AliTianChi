@@ -6,19 +6,47 @@ Created on Mon Mar 30 16:39:27 2015
 """
 import pandas as pd
 import random
-
+import numpy as np
+def fillinf(x):
+    if x==np.inf:
+        x=10000
+    return x
 #提取前十天的用户特征
 """
-1.前十天的购买量 输入为十天的DF（U I B CU CI T） 输出为U  F F为十天的购买量
+1.前十天,五天,三天,一天的购买量 输入为十天的DF（U I B CU CI T） 输出为U  Fx Fx为x天的购买量 
 """
-def buy_sum10(df):
+def buy_sum10(df,i):
     df_buy_sum10 = df[["user_id","behavior_type","time"]]
-    df_buy_sum10 = df_buy_sum10[df_buy_sum10.behavior_type==4][["user_id","time"]]
-    x = df_buy_sum10.user_id.value_counts()
-    df_buy_sum10 = pd.DataFrame()
-    df_buy_sum10["user_id"] = x.index
-    df_buy_sum10["buy_sum10"] = x.values
-    return df_buy_sum10[["user_id","buy_sum10"]]
+    df_2 = df_buy_sum10[df_buy_sum10.behavior_type==4][["user_id","time"]]
+    
+    x = df_2.user_id.value_counts()
+    a = pd.DataFrame()
+    a["user_id"] = x.index
+    a["U_buy_sum10"] = x.values
+    
+    df_2 = df_2[df_2.time>i-6]
+    x = df_2.user_id.value_counts()
+    b = pd.DataFrame()
+    b["user_id"] = x.index
+    b["U_buy_sum5"] = x.values
+
+    df_2 = df_2[df_2.time>i-4]
+    x = df_2.user_id.value_counts()
+    c = pd.DataFrame()
+    c["user_id"] = x.index
+    c["U_buy_sum3"] = x.values
+    
+    df_2 = df_2[df_2.time>i-2]
+    x = df_2.user_id.value_counts()
+    d = pd.DataFrame()
+    d["user_id"] = x.index
+    d["U_buy_sum1"] = x.values
+    
+    x = pd.merge(left=a,right=b,how="left")
+    x = pd.merge(left=x,right=c,how="left")
+    x = pd.merge(left=x,right=d,how="left")
+    x.fillna(0,inplace=True)
+    return x
 """
 2.用户购买行为占所有行为 输入为十天的DF（U I B CU CI T） 输出为U  F1  F1为十天的行为数 
 """
@@ -28,8 +56,113 @@ def behavior_sum10(df):
     x = df_2.user_id.value_counts()    
     a = pd.DataFrame()
     a["user_id"] = x.index
-    a["behaviors_sum10"] = x.values
+    a["U_behaviors_sum10"] = x.values
     return a
+"""
+3.前十天,五天,三天,一天的点击量 输入为十天的DF（U I B CU CI T） 输出为U  Fx Fx为x天的点击量 
+"""
+def click_sum10(df,i):
+    df_buy_sum10 = df[["user_id","behavior_type","time"]]
+    df_2 = df_buy_sum10[df_buy_sum10.behavior_type==1][["user_id","time"]]
+    
+    x = df_2.user_id.value_counts()
+    a = pd.DataFrame()
+    a["user_id"] = x.index
+    a["U_click_sum10"] = x.values
+    
+    df_2 = df_2[df_2.time>i-6]
+    x = df_2.user_id.value_counts()
+    b = pd.DataFrame()
+    b["user_id"] = x.index
+    b["U_click_sum5"] = x.values
+
+    df_2 = df_2[df_2.time>i-4]
+    x = df_2.user_id.value_counts()
+    c = pd.DataFrame()
+    c["user_id"] = x.index
+    c["U_click_sum3"] = x.values
+    
+    df_2 = df_2[df_2.time>i-2]
+    x = df_2.user_id.value_counts()
+    d = pd.DataFrame()
+    d["user_id"] = x.index
+    d["U_click_sum1"] = x.values
+    
+    x = pd.merge(left=a,right=b,how="left")
+    x = pd.merge(left=x,right=c,how="left")
+    x = pd.merge(left=x,right=d,how="left")
+    x.fillna(0,inplace=True)
+    return x
+"""
+3.前十天,五天,三天,一天的收藏量 输入为十天的DF（U I B CU CI T） 输出为U  Fx Fx为x天的收藏量 
+"""
+def collection_sum10(df,i):
+    df_buy_sum10 = df[["user_id","behavior_type","time"]]
+    df_2 = df_buy_sum10[df_buy_sum10.behavior_type==2][["user_id","time"]]
+    
+    x = df_2.user_id.value_counts()
+    a = pd.DataFrame()
+    a["user_id"] = x.index
+    a["U_collection_sum10"] = x.values
+    
+    df_2 = df_2[df_2.time>i-6]
+    x = df_2.user_id.value_counts()
+    b = pd.DataFrame()
+    b["user_id"] = x.index
+    b["U_collection_sum5"] = x.values
+
+    df_2 = df_2[df_2.time>i-4]
+    x = df_2.user_id.value_counts()
+    c = pd.DataFrame()
+    c["user_id"] = x.index
+    c["U_collection_sum3"] = x.values
+    
+    df_2 = df_2[df_2.time>i-2]
+    x = df_2.user_id.value_counts()
+    d = pd.DataFrame()
+    d["user_id"] = x.index
+    d["U_collection_sum1"] = x.values
+    
+    x = pd.merge(left=a,right=b,how="left")
+    x = pd.merge(left=x,right=c,how="left")
+    x = pd.merge(left=x,right=d,how="left")
+    x.fillna(0,inplace=True)
+    return x
+"""
+4.前十天,五天,三天,一天的购物车量 输入为十天的DF（U I B CU CI T） 输出为U  Fx Fx为x天的购物车量 
+"""
+def car_sum10(df,i):
+    df_buy_sum10 = df[["user_id","behavior_type","time"]]
+    df_2 = df_buy_sum10[df_buy_sum10.behavior_type==3][["user_id","time"]]
+    
+    x = df_2.user_id.value_counts()
+    a = pd.DataFrame()
+    a["user_id"] = x.index
+    a["U_car_sum10"] = x.values
+    
+    df_2 = df_2[df_2.time>i-6]
+    x = df_2.user_id.value_counts()
+    b = pd.DataFrame()
+    b["user_id"] = x.index
+    b["U_car_sum5"] = x.values
+
+    df_2 = df_2[df_2.time>i-4]
+    x = df_2.user_id.value_counts()
+    c = pd.DataFrame()
+    c["user_id"] = x.index
+    c["U_car_sum3"] = x.values
+    
+    df_2 = df_2[df_2.time>i-2]
+    x = df_2.user_id.value_counts()
+    d = pd.DataFrame()
+    d["user_id"] = x.index
+    d["U_car_sum1"] = x.values
+    
+    x = pd.merge(left=a,right=b,how="left")
+    x = pd.merge(left=x,right=c,how="left")
+    x = pd.merge(left=x,right=d,how="left")
+    x.fillna(0,inplace=True)
+    return x
 #提取前十天的商品特征
 """
 1.十天商品的销量，五天的销量，三天的销量，最后一天的销量 输入为十天的DF（U I B CU CI T） 输出为U  F1 F2 F3 F4 

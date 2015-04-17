@@ -176,6 +176,51 @@ Created on Thu Apr 02 11:13:43 2015
     ensambel me
     RL       yue
     RF       dai
+4.17
+训练以后在训练集的表现
+ensambel predict_num is:  707
+ensambel hit_num is:  51
+ensambel total result num is:  473
+ensambel Precision is： 0.0721357850071
+ensambel Call rate is:  0.107822410148
+ensambel F1 is:  0.0864406779661 
+
+RL predict_num is:  1762
+RL hit_num is:  51
+RL total result num is:  473
+RL Precision is： 0.0289443813848
+RL Call rate is:  0.107822410148
+RL F1 is:  0.0456375838926 
+
+RF predict_num is:  1485
+RF hit_num is:  142
+RF total result num is:  473
+RF Precision is： 0.0956228956229
+RF Call rate is:  0.30021141649
+RF F1 is:  0.145045965271 
+
+在验证集上
+ensambel predict_num is:  821
+ensambel hit_num is:  39
+ensambel total result num is:  473
+ensambel Precision is： 0.047503045067
+ensambel Call rate is:  0.0824524312896
+ensambel F1 is:  0.0602782071097 
+
+RL predict_num is:  1854
+RL hit_num is:  51
+RL total result num is:  473
+RL Precision is： 0.0275080906149
+RL Call rate is:  0.107822410148
+RL F1 is:  0.0438332617104 
+
+RF predict_num is:  1098
+RF hit_num is:  45
+RF total result num is:  473
+RF Precision is： 0.0409836065574
+RF Call rate is:  0.0951374207188
+RF F1 is:  0.0572883513686 
+
 30号 单买前10天无记录
 139878830 174054968
 139878830 37101896
