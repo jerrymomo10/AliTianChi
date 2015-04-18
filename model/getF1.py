@@ -19,7 +19,7 @@ callrate = 0
 
 #换验证集这个要改
 
-x = pd.read_csv("predict_v_RL.csv")
+x = pd.read_csv("predict_v_Gbrt.csv")
 y = pd.read_csv("predict_v_RF.csv")
 z = pd.merge(left=x,right=y,how="inner")
 z.to_csv("ensambel_predict_result.csv",index=False)

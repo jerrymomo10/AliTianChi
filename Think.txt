@@ -220,6 +220,8 @@ RF total result num is:  473
 RF Precision is： 0.0409836065574
 RF Call rate is:  0.0951374207188
 RF F1 is:  0.0572883513686 
+4.18
+Gbrt 提高明显
 
 30号 单买前10天无记录
 139878830 174054968

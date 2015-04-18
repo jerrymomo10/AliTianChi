@@ -21,7 +21,7 @@ df_items = a
 df_trains = pd.DataFrame()
 os.chdir('files')
 #20 不包括30的数据 21 包含30号的
-for x in range(21):
+for x in range(20):
     i = j+x
     print "Trains "+str(x+1)
     #提取最后一天的购买记录为前十天打标签
